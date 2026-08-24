@@ -16,8 +16,12 @@ from starlette.middleware.sessions import SessionMiddleware
 load_dotenv()
 
 ROOT = Path(__file__).resolve().parent
-STATIC = ROOT / "static"
-DATA = ROOT / "data" / "state.json"
+STATIC_DIR = ROOT / "static" if (ROOT / "static").is_dir() else ROOT
+DATA = (
+    ROOT / "data" / "state.json"
+    if (ROOT / "data" / "state.json").exists() or (ROOT / "static").is_dir()
+    else ROOT / "state.json"
+)
 
 START = date(2026, 8, 24)
 END = date(2026, 9, 23)
@@ -35,7 +39,6 @@ app.add_middleware(
     https_only=HTTPS_ONLY,
     max_age=60 * 60 * 24 * 40,
 )
-app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
 class EntryIn(BaseModel):
@@ -83,9 +86,35 @@ def password_ok(password: str) -> bool:
     return hmac.compare_digest(given, real)
 
 
+def first_file(*paths: Path) -> Path | None:
+    for path in paths:
+        if path.is_file():
+            return path
+    return None
+
+
 @app.get("/")
 async def index() -> FileResponse:
-    return FileResponse(STATIC / "index.html")
+    page = first_file(ROOT / "static" / "index.html", ROOT / "index.html")
+    if page is None:
+        raise HTTPException(404, "index.html не найден")
+    return FileResponse(page)
+
+
+@app.get("/static/img/{name}")
+async def image(name: str) -> FileResponse:
+    safe = Path(name).name
+    found = first_file(
+        ROOT / "static" / "img" / safe,
+        ROOT / safe,
+        ROOT / "static" / safe,
+    )
+    if found is None:
+        raise HTTPException(404)
+    return FileResponse(found)
+
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 @app.get("/api/me")
