@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Игорь — The Last of Us</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="is-guest">
+  <div class="world" aria-hidden="true">
+    <img class="world-bg" src="/static/img/bg-city.png" alt="">
+    <div class="world-grade"></div>
+    <div class="world-grain"></div>
+    <div class="world-vignette"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="ember"></span>
+      <div>
+        <p>Челлендж</p>
+        <h1>The Last of Us</h1>
+      </div>
+    </div>
+    <div class="top-actions">
+      <p class="topbar-meta">24.08.2026 — 23.09.2026 · промокоды Гарти</p>
+      <button type="button" class="auth-btn" id="login-btn">Войти</button>
+      <button type="button" class="auth-btn" id="logout-btn">Выйти</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <aside class="survivor">
+      <img class="survivor-photo" src="/static/img/igor.png?v=2" alt="Игорь">
+      <div class="survivor-shade"></div>
+      <div class="nameplate">
+        <p>Survivor</p>
+        <h2>Игорь</h2>
+        <div class="status-pill" id="streak-pill">Серия жива</div>
+      </div>
+      <ul class="stats" id="stats"></ul>
+    </aside>
+
+    <section class="board">
+      <div class="rules">
+        <article>
+          <span>01</span>
+          <p>Сливать месяц промокоды от Гарти без ошибок</p>
+        </article>
+        <article>
+          <span>02</span>
+          <p>Сливать промокод за 6 секунд после поста</p>
+        </article>
+      </div>
+
+      <div class="journal">
+        <div class="paper">
+          <p class="journal-kicker">Журнал дня</p>
+          <h3 id="day-title">24 августа</h3>
+          <p class="journal-hint" id="day-hint">Выбери день, чтобы посмотреть запись.</p>
+
+          <div class="day-view" id="day-view"></div>
+
+          <form id="log-form" class="editor">
+            <div class="choice" role="group" aria-label="Результат слива">
+              <button type="button" class="choice-btn" data-ok="true" id="btn-ok">Слил правильно</button>
+              <button type="button" class="choice-btn bad" data-ok="false" id="btn-bad">С ошибкой</button>
+            </div>
+
+            <div class="time-block">
+              <div class="time-head">
+                <label for="seconds">Время слива</label>
+                <button type="button" class="watch-btn" id="watch-btn">Засечь</button>
+              </div>
+              <div class="time-row">
+                <button type="button" class="step" id="sec-minus" aria-label="Меньше">−</button>
+                <input id="seconds" name="seconds" type="number" min="0" max="120" step="0.01" placeholder="0.00" inputmode="decimal">
+                <button type="button" class="step" id="sec-plus" aria-label="Больше">+</button>
+                <span class="unit">сек</span>
+              </div>
+              <div class="slider-wrap">
+                <input id="slider" type="range" min="0" max="10" step="0.01" value="0">
+                <div class="limit-marks" aria-hidden="true">
+                  <span>0 сек</span>
+                  <span>10 сек</span>
+                </div>
+              </div>
+              <p class="limit-note">Лимит челленджа — 6 секунд</p>
+              <div class="chips" id="chips">
+                <button type="button" data-sec="2">2с</button>
+                <button type="button" data-sec="3">3с</button>
+                <button type="button" data-sec="4">4с</button>
+                <button type="button" data-sec="5">5с</button>
+                <button type="button" data-sec="6">6с</button>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="save" id="save-btn">Сохранить день</button>
+              <button type="button" class="ghost" id="clear-btn">Очистить</button>
+            </div>
+            <p class="form-msg" id="form-msg" hidden></p>
+          </form>
+        </div>
+
+        <div class="calendar-card">
+          <div class="calendar-head">
+            <h3>Календарь</h3>
+            <p>Нажми день, чтобы посмотреть</p>
+          </div>
+          <div class="legend">
+            <span><i class="win"></i> чисто</span>
+            <span><i class="late"></i> опоздал</span>
+            <span><i class="miss"></i> ошибка</span>
+            <span><i class="empty"></i> пусто</span>
+          </div>
+          <div class="cal" id="cal"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="login-modal" hidden>
+    <div class="modal-card">
+      <p>Вход в журнал</p>
+      <h3>Только для Игоря</h3>
+      <form id="login-form">
+        <input id="login-pass" type="password" placeholder="Пароль" autocomplete="current-password" required>
+        <button type="submit" class="save">Войти</button>
+        <p class="form-msg err" id="login-msg" hidden></p>
+      </form>
+      <button type="button" class="ghost" id="login-cancel">Закрыть</button>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
